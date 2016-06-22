@@ -1,1 +1,1 @@
-{"clothes_available":[{"id":"1234", "type":"shirt", "color":"red"}, {"id": "4321", "type":"pants", "color":"blue"}]}
+{"clothes_unavailable": [{"name": "jeans", "color": "blue", "id": "4321", "type": "pants"}], "clothes_available": [{"name": "my lovely sweater", "color": "red", "id": "1234", "type": "shirt"}, {"name": "addidas sneakers", "color": "yellow", "id": "3345", "type": "shoes"}]}
