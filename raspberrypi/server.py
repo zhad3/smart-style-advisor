@@ -11,14 +11,14 @@ def weather():
 	lastqueried = getJsonFromFile('time.json')
 	last = int(lastqueried['time'])
 	difference = now - last
-	if difference > 600:
-		print('current weather data is older than 10 minutes -- fetching from server')
-		getOnlineWeatherData(2934691)
-		f = open('time.json', 'w')
-		try:
-			json.dump({"time": str(now)}, f)
-		finally:
-			f.close()
+#	if difference > 600:
+#		print('current weather data is older than 10 minutes -- fetching from server')
+#		getOnlineWeatherData(2934691)
+#		f = open('time.json', 'w')
+#		try:
+#			json.dump({"time": str(now)}, f)
+#		finally:
+#			f.close()
 	# Now return actual weather data
 	weatherData = getLocalWeatherData()
 	return str(weatherData)#getJsonFromFile('weather.json')

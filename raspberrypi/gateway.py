@@ -3,6 +3,7 @@
 
 import json
 import requests
+import serial
 
 # A function that takes a uid from an RFID Chip (INT) and maps it to an URL (String)
 def mapToUrl( uid ):
@@ -68,4 +69,8 @@ def processID( uid ):
     print(info)
     return
 
-processID(3345)
+#processID(3345)
+
+ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
+while 1:
+	print(ser.readline())
