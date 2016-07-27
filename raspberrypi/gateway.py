@@ -5,10 +5,16 @@ import json
 import requests
 import serial
 
-# A function that takes a uid from an RFID Chip (INT) and maps it to an URL (String)
+# A function that takes a uid from an RFID Chip (HEXADECIMAL) and maps it to an URL (String) or returns None if the uid is not formatted correctly
 def mapToUrl( uid ):
-    url = 'http://server.localhost/#' + str(uid)
-    return url
+    # The first 2 hexadecimal characters (00-ff) need to be present (manufacturer id) aswell as a following id (clothing id)
+    if len(uid) > 2:
+        baseurl = 'http://server.localhost/'
+        manid = int(uid[:2],16)
+        clothid = uid[2:] # Do not convert to int
+        return baseurl+'?mid='+manid+'&cid='+clothid
+    else:
+        return None
 
 # This function returns a json Object from a specified file
 def getJsonFromFile( fileName ):
@@ -69,8 +75,15 @@ def processID( uid ):
     print(info)
     return
 
-#processID(3345)
-
+# This might change depending on how many devices are connected to the raspberry pi
+# or when using a different distribution/os
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 while 1:
-	print(ser.readline())
+    uid = ser.readline().rstrip('\r\n')
+    if uid != "":
+        url = mapToUrl(uid)
+        if url != None:
+            print(url)
+        else:
+            print("Bad url format")
+
