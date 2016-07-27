@@ -43,10 +43,14 @@ def processID( uid ):
         # Case 1.1 : Clothing was in the closet and was just removed
         if is_available:
             is_available = 0
+            info[1] = 0
+            info[0]["is_available"] = 0
             print('Clothing ' + clothing['name'] + ' is now unavailable')
         # Case 1.2 : Clothing was not in the closet and was just inserted
         else:
             is_available = 1
+            info[1] = 1
+            info[0]["is_available"] = 1
             print('Clothing ' + clothing['name'] + ' is now available')
 
         print("is_available:",is_available)
