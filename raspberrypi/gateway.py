@@ -51,7 +51,7 @@ def processID( uid ):
 
         json.dump(data, open('clothing.json', 'w'))
     # Case 2 : clothing is not in DB and has to be retrieved from server
-    else:
+    #else:
         #url = "http://localhost:3000" # Dummy URL for testing environment -> mapToUrl
         #r = requests.get(url)
         #info = r.json()
