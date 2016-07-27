@@ -42,13 +42,17 @@ def processID( uid ):
         data = info[2]          # JSON Object Array
         # Case 1.1 : Clothing was in the closet and was just removed
         if is_available:
-            is_available = False
+            is_available = 0
             print('Clothing ' + clothing['name'] + ' is now unavailable')
         # Case 1.2 : Clothing was not in the closet and was just inserted
         else:
-            is_available = True
+            is_available = 1
             print('Clothing ' + clothing['name'] + ' is now available')
 
+        print("is_available:",is_available)
+        print("info[1]:",info[1])
+        print("info[0][\"is_available\"]:",info[0]["is_available"])
+        print("data[0][\"is_available\"]:",data[0]["is_available"])
         json.dump(data, open('clothing.json', 'w'))
     # Case 2 : clothing is not in DB and has to be retrieved from server
     #else:
@@ -60,7 +64,6 @@ def processID( uid ):
         #json.dump(data, open('clothing.json', 'w'))
         #print('ID was not in local database -- found on server -- added to local db')
         #print('Clothing ' + info['name'] + ' is now available!')
-    print(info)
     return
 
 # The device might change depending on how many other devices are connected to the raspberry pi
