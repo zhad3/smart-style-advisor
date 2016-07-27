@@ -12,7 +12,7 @@ def mapToUrl( uid ):
         baseurl = 'http://server.localhost/'
         manid = int(uid[:2],16)
         clothid = uid[2:] # Do not convert to int
-        return baseurl+'?mid='+manid+'&cid='+clothid
+        return baseurl+'?mid='+str(manid)+'&cid='+str(clothid)
     else:
         return None
 
