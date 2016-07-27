@@ -1,1 +1,1 @@
-{"clothes_unavailable": [{"name": "jeans", "color": "blue", "id": "4321", "type": "pants"}], "clothes_available": [{"name": "my lovely sweater", "color": "red", "id": "1234", "type": "shirt"}, {"name": "addidas sneakers", "color": "yellow", "id": "3345", "type": "shoes"}]}
+[{"name": "jeans", "color": "blue", "id": "22D0F355", "type": "pants", "is_available": true},{"name": "my lovely sweater", "color": "red", "id": "799FD4E5", "type": "shirt", "is_available": false},{"name": "addidas sneakers", "color": "yellow", "id": "5785143B", "type": "shoes", "is_available": false}]

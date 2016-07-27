@@ -26,12 +26,9 @@ def getJsonFromFile( fileName ):
 def lookUpClothing( uid ):
     result = None
     data = getJsonFromFile('clothing.json')
-    for clothing in data["clothes_available"]:
-        if uid == int(clothing["id"]):
-            result = (clothing, True)
-    for clothing in data["clothes_unavailable"]:
-        if uid == int(clothing["id"]):
-            result = (clothing, False)
+    for clothing in data:
+        if uid == clothing["id"]:
+            result = (clothing, clothing["is_available"], data)
     return result
 
 # This function will be executed if an uid was successfully received
@@ -40,42 +37,33 @@ def processID( uid ):
     # Case 1 : clothing is already stored in DB
     if info != None:
         print('found ID in local database')
+        clothing = info[0]      # JSON Object
+        is_available = info[1]  # Boolean
+        data = info[2]          # JSON Object Array
         # Case 1.1 : Clothing was in the closet and was just removed
-        if info[1]:
-            data = getJsonFromFile('clothing.json')
-            for i in range(len(data['clothes_available'])):
-                if int(data['clothes_available'][i]['id']) == int(info[0]['id']):
-                    c = data['clothes_available'][i]
-                    data['clothes_unavailable'].append(c)
-                    data['clothes_available'].pop(i)
-                    break
-            json.dump(data, open('clothing.json', 'w'))
-            print('Clothing ' + info[0]['name'] + ' is now unavailable')
+        if is_available:
+            is_available = False
+            print('Clothing ' + clothing['name'] + ' is now unavailable')
         # Case 1.2 : Clothing was not in the closet and was just inserted
         else:
-            data = getJsonFromFile('clothing.json')
-            for i in range(len(data['clothes_unavailable'])):
-                if int(data['clothes_unavailable'][i]['id']) == int(info[0]['id']):
-                    c = data['clothes_unavailable'][i]
-                    data['clothes_available'].append(c)
-                    data['clothes_unavailable'].pop(i)
-                    break
-            json.dump(data, open('clothing.json', 'w'))
-            print('Clothing ' + info[0]['name'] + ' is now available')
+            is_available = True
+            print('Clothing ' + clothing['name'] + ' is now available')
+
+        json.dump(data, open('clothing.json', 'w'))
     # Case 2 : clothing is not in DB and has to be retrieved from server
     else:
-        url = "http://localhost:3000" # Dummy URL for testing environment -> mapToUrl
-        r = requests.get(url)
-        info = r.json()
-        data = getJsonFromFile('clothing.json')
-        data["clothes_available"].append(info)
-        json.dump(data, open('clothing.json', 'w'))
-        print('ID was not in local database -- found on server -- added to local db')
-        print('Clothing ' + info['name'] + ' is now available!')
+        #url = "http://localhost:3000" # Dummy URL for testing environment -> mapToUrl
+        #r = requests.get(url)
+        #info = r.json()
+        #data = getJsonFromFile('clothing.json')
+        #data["clothes_available"].append(info)
+        #json.dump(data, open('clothing.json', 'w'))
+        #print('ID was not in local database -- found on server -- added to local db')
+        #print('Clothing ' + info['name'] + ' is now available!')
     print(info)
     return
 
-# This might change depending on how many devices are connected to the raspberry pi
+# The device might change depending on how many other devices are connected to the raspberry pi
 # or when using a different distribution/os
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 while 1:
@@ -83,7 +71,8 @@ while 1:
     if uid != "":
         url = mapToUrl(uid)
         if url != None:
-            print(url)
+            print(uid+" -> "+url)
+            processID(uid)
         else:
-            print("Bad url format")
+            print(uid+" -> Bad url format")
 
