@@ -3,7 +3,7 @@
 import json
 import requests
 import time
-from bottle import route, run
+from bottle import route, run, response
 
 @route('/weather')
 def weather():
@@ -41,5 +41,16 @@ def getOnlineWeatherData( cityID ): #Duisburg 2934691
 def getLocalWeatherData():
 	data = getJsonFromFile('weather.json')
 	return {"temperatur": data["main"]["temp"]}
+
+@route('/clothing/<manid>/<clothid>')
+def getClothingData(manid,clothid):
+	# Concatenate manid and clothid
+	manid = hex(int(manid))[2:] # Remove the preceeding '0x'
+	id = str(manid)+str(clothid)
+	data = getJsonFromFile('serverClothing.json')
+	for clothing in data:
+		if clothing["id"] == id:
+			response.content_type = 'application/json'
+			return clothing
 
 run(host='localhost', port=3000, debug=True)

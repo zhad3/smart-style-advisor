@@ -9,23 +9,29 @@ import serial
 def mapToUrl( uid ):
     # The first 2 hexadecimal characters (00-ff) need to be present (manufacturer id) aswell as a following id (clothing id)
     if len(uid) > 2:
-        baseurl = 'http://server.localhost/'
+        baseurl = 'http://localhost:3000/clothing/'
         manid = int(uid[:2],16)
         clothid = uid[2:] # Do not convert to int
-        return baseurl+'?mid='+str(manid)+'&cid='+str(clothid)
+        return baseurl+str(manid)+'/'+str(clothid)
     else:
         return None
 
 # This function returns a json Object from a specified file
 def getJsonFromFile( fileName ):
-    data_file = open(fileName)
-    data = json.load(data_file)
+    data = None
+    try:
+        data_file = open(fileName)
+        data = json.load(data_file)
+    except ValueError:
+        return None
     return data
 
 # This function searches a local json file for a specific uid | returns None if nothing is found else it returns a json object
 def lookUpClothing( uid ):
     result = None
     data = getJsonFromFile('clothing.json')
+    if data == None:
+        return None
     for clothing in data:
         if uid == clothing["id"]:
             result = (clothing, clothing["is_available"], data)
@@ -42,30 +48,39 @@ def processID( uid ):
         data = info[2]          # JSON Object Array
         # Case 1.1 : Clothing was in the closet and was just removed
         if is_available:
-            is_available = 0
             info[0]["is_available"] = 0
             print('Clothing ' + clothing['name'] + ' is now unavailable')
         # Case 1.2 : Clothing was not in the closet and was just inserted
         else:
-            is_available = 1
             info[0]["is_available"] = 1
             print('Clothing ' + clothing['name'] + ' is now available')
 
-        print("is_available:",is_available)
-        print("info[1]:",info[1])
-        print("info[0][\"is_available\"]:",info[0]["is_available"])
-        print("data[0][\"is_available\"]:",data[0]["is_available"])
         json.dump(data, open('clothing.json', 'w'))
     # Case 2 : clothing is not in DB and has to be retrieved from server
-    #else:
-        #url = "http://localhost:3000" # Dummy URL for testing environment -> mapToUrl
-        #r = requests.get(url)
-        #info = r.json()
-        #data = getJsonFromFile('clothing.json')
-        #data["clothes_available"].append(info)
-        #json.dump(data, open('clothing.json', 'w'))
-        #print('ID was not in local database -- found on server -- added to local db')
-        #print('Clothing ' + info['name'] + ' is now available!')
+    else:
+        url = mapToUrl(uid)
+	if url != None:
+	    r = requests.get(url)
+            data = []
+            newinfo = {}
+            try:
+	        newinfo = r.json()
+            except ValueError:
+                print("Couldn't retrieve clothing data from server",r.status_code,r.headers['content-type'],r.encoding,r.text)
+                return
+
+	    newinfo["is_available"] = 1
+
+            try:
+	        data = getJsonFromFile('clothing.json')
+            except ValueError:
+                data = []
+            if data == None:
+                data = []
+	    data.append(newinfo)
+	    json.dump(data, open('clothing.json', 'w'))
+	    print('ID was not in local database -- found on server -- added to local db')
+	    print('Clothing ' + newinfo['name'] + ' is now available!')
     return
 
 # The device might change depending on how many other devices are connected to the raspberry pi
