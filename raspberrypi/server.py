@@ -21,7 +21,7 @@ def weather():
 #			f.close()
 	# Now return actual weather data
 	weatherData = getLocalWeatherData()
-	return str(weatherData)#getJsonFromFile('weather.json')
+	return weatherData
 
 # This function returns a json Object from a specified file
 def getJsonFromFile( fileName ):
@@ -40,7 +40,7 @@ def getOnlineWeatherData( cityID ): #Duisburg 2934691
 		f.close
 def getLocalWeatherData():
 	data = getJsonFromFile('weather.json')
-	return {"temperatur": data["main"]["temp"]}
+	return {"temperatur": int(data["main"]["temp"])}
 
 @route('/clothing/<manid>/<clothid>')
 def getClothingData(manid,clothid):

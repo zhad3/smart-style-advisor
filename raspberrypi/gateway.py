@@ -81,7 +81,62 @@ def processID( uid ):
 	    json.dump(data, open('clothing.json', 'w'))
 	    print('ID was not in local database -- found on server -- added to local db')
 	    print('Clothing ' + newinfo['name'] + ' is now available!')
+
+    # Send recommended clothing to display server
+    rec_clothing = getRecClothList()
+
     return
+
+# This function takes the current temperature and returns a list of clothing that fits the temperature
+# Clothing types:
+#     pants
+#     top
+#     shoes
+def getRecClothList():
+    rec_clothing = []
+    found_clothing_types = []
+    cloth_data = getJsonFromFile("clothing.json")
+    if cloth_data == None:
+        return rec_clothing
+
+    # Get temperature
+    temp = 10
+    r = requests.get("http://localhost:3000/weather")
+    try:
+        temp = int(r.json()["temperatur"])
+    except ValueError,e:
+        print("Couldn't get weather data",r.text,e.args)
+        return rec_clothing
+
+    for clothing in cloth_data:
+        # Depending on the temperature we decide which clothing we wish to recommend
+        if temp < 15:
+            # Cold
+            if clothing["subtype"] in ["jeans","sneakers","sweater"] and clothing["is_available"]:
+                rec_clothing.append(clothing)
+                if clothing["type"] not in found_clothing_types:
+                    found_clothing_types.append(clothing["type"])
+        elif temp > 15 and temp < 20:
+            # Warm
+            if clothing["subtype"] in ["jeans","sneakers","shirt"] and clothing["is_available"]:
+                rec_clothing.append(clothing)
+                if clothing["type"] not in found_clothing_types:
+                    found_clothing_types.append(clothing["type"])
+        elif temp > 20:
+            # Hot
+            if clothing["subtype"] in ["shorts","sneakers","shirt"] and clothing["is_available"]:
+                rec_clothing.append(clothing)
+                if clothing["type"] not in found_clothing_types:
+                    found_clothing_types.append(clothing["type"])
+
+    # There is atleast one type (pants, top or shoes) that we couldn't find any fitting clothing for
+    # Try again with fallbacks adding clothing with no fitting subtype (wear jeans even though its hot)
+    if len(found_clothing_types) == 0:
+        for clothing in cloth_data:
+            if clothing["type"] in found_clothing_types and clothing["is_available"]:
+                rec_clothing.append(clothing)
+
+    return rec_clothing
 
 # The device might change depending on how many other devices are connected to the raspberry pi
 # or when using a different distribution/os
