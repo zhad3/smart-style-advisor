@@ -26,6 +26,34 @@ app.get("/clothing", function(req, res){
 	});
 });
 
+app.get("/weather", function(req, res){
+	fs.readFile('weather.json', 'utf8', function(err, data){
+		if(err)
+			throw err;
+		var jsonObj = JSON.parse(data);
+		res.writeHead(200, { 'Content-Type': 'application/json' });
+		res.end(JSON.stringify(jsonObj));
+	});
+});
+
+
+// assuming POST: clothing=[{},{}...]          <-- URL encoding
+//
+// or       POST: {"clothing":"[{},{}...]"}  <-- JSON encoding
+
+app.post('/updateClothing', function(req, res) {
+    var clothing = req.body.clothing;
+    var temp = req.body.temp;
+	    fs.writeFile('clothing.json', JSON.stringify(clothing), 'utf8', function(err){
+	    	//thow err -> the magnificent null error!
+	    });
+	    fs.writeFile('weather.json', JSON.stringify({"temp": temp}), function(err){
+
+	    });
+	    // ...
+
+});
+
 app.use("*",function(req, res){
 	res.render('404');
 });

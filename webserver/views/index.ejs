@@ -9,9 +9,20 @@
 	<div id='top'>
 			<img src="SmartStyleAdvisor_logo.png" width="400" height="180">
 	</div>
-	<div id='content'>
-		<h2>Your Closet</h2>
-		<ul id="clothingList"></ul>
+	<div id='content' class="container">
+		<div class="item">
+			<h2>Recommended Clothing</h2>
+			<ul id="clothingList"></ul>
+		</div>
+		<div class="item">
+			<h2>Current Weather</h2>
+			<div id="weather"></div>
+		</div>
+		<!-- Test Button
+		<div class="item">
+			<button type="submit" id="testb" value="Submit">Submit</button>
+		</div>
+		-->
 	</div>
 	
 	<script type="text/javascript">
@@ -22,12 +33,27 @@
 		}
 
 		$.getJSON("/clothing", function(data){
-			for(var i = 0; i < data.clothing.length; i++){
-				var item = data.clothing[i];
+			for(var i = 0; i < data.length; i++){
+				var item = data[i];
 				buildList(item.name, item.color, item.type);
 			}
 			
 		});
+
+		$.getJSON("/weather", function(data){
+			var h = '<h3>Temperature: ' + data.temp + '</h3>';
+			$('#weather').append(h); 
+			
+		});
+		/* Test Function
+		$( "#testb" ).click(function() {
+  			$.ajax({
+  				method: "POST",
+  				url: "/updateClothing",
+  				data: {"clothing": [{"color": "blue", "type": "pants","subtype":"jeans", "name": "Jeans", "id": "22D0F355"}, {"color": "red", "type": "top","subtype":"shirt", "name": "T-Shirt", "id": "799FD4E5"}, {"color": "yellow", "type": "shoes","subtype":"sneakers", "name": "Addidas Sneakers", "id": "5785143B"},{"color": "black", "type": "top","subtype":"sweater", "name": "Cool Sweater", "id": "00000000"},{"color":"white", "type":"pants","subtype":"shorts","name":"White Shorts","id":"11111111"}], "temp":"20"}
+			});
+		});
+		*/
 	</script>
 </body>
 </html>

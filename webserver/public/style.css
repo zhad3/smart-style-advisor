@@ -18,5 +18,32 @@ body {
 }
 
 #clothingList {
-	background-color: #777777;
+	/*background-color: #777777;*/
+}
+
+.container {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  
+  -webkit-flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+.item {
+  background: tomato;
+  padding: 5px;
+  margin-top: 10px;
+  
+  line-height: 50px;
+  color: white;
+  font-weight: bold;
+  font-size: 1em;
+  text-align: center;
 }
