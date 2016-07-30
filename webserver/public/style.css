@@ -1,0 +1,22 @@
+html, body {
+	margin: 0;
+	padding: 0;
+}
+html {
+	background-color: #AAAAAA;
+	padding: 20px;
+}
+body {
+	background-color: #EEEEEE;
+}
+#top {
+	background-color: #234567;
+}
+
+#content {
+	padding: 5px;
+}
+
+#clothingList {
+	background-color: #777777;
+}

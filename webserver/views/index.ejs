@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Smart Style Advisor</title>
+	<script type="text/javascript" src="jquery-3.1.0.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div id='top'>
+			<img src="SmartStyleAdvisor_logo.png" width="400" height="180">
+	</div>
+	<div id='content'>
+		<h2>Your Closet</h2>
+		<ul id="clothingList"></ul>
+	</div>
+	
+	<script type="text/javascript">
+
+		function buildList(name, color, type){
+			var h = '<li><span style="color:' + color + '">' + color + '</span> ' + name + ' Type: ' + type + '</li>';
+			$('#clothingList').append(h);
+		}
+
+		$.getJSON("/clothing", function(data){
+			for(var i = 0; i < data.clothing.length; i++){
+				var item = data.clothing[i];
+				buildList(item.name, item.color, item.type);
+			}
+			
+		});
+	</script>
+</body>
+</html>

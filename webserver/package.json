@@ -1,0 +1,14 @@
+{
+	"name" : "smart-style-advisor",
+	"version" : "0.0.1",
+	"description" : "This Application shows the contents of your closet and gives a recommandation in compliance to the local weather!",
+	"license" : "GPL-3.0",
+	"scripts" : {
+		"start" : " node Server.js"
+	},
+	"dependencies" : {
+		"express" : "latest",
+		"body-parser" : "latest",
+		"ejs" : "latest"
+	}
+}
