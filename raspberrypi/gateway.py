@@ -59,28 +59,28 @@ def processID( uid ):
     # Case 2 : clothing is not in DB and has to be retrieved from server
     else:
         url = mapToUrl(uid)
-	if url != None:
-	    r = requests.get(url)
+        if url != None:
+            r = requests.get(url)
             data = []
             newinfo = {}
             try:
-	        newinfo = r.json()
+                newinfo = r.json()
             except ValueError:
                 print("Couldn't retrieve clothing data from server",r.status_code,r.headers['content-type'],r.encoding,r.text)
                 return
 
-	    newinfo["is_available"] = 1
+            newinfo["is_available"] = 1
 
             try:
-	        data = getJsonFromFile('clothing.json')
+                data = getJsonFromFile('clothing.json')
             except ValueError:
                 data = []
             if data == None:
                 data = []
-	    data.append(newinfo)
-	    json.dump(data, open('clothing.json', 'w'))
-	    print('ID was not in local database -- found on server -- added to local db')
-	    print('Clothing ' + newinfo['name'] + ' is now available!')
+            data.append(newinfo)
+            json.dump(data, open('clothing.json', 'w'))
+            print('ID was not in local database -- found on server -- added to local db')
+            print('Clothing ' + newinfo['name'] + ' is now available!')
 
     # Send recommended clothing to display server
     rec_clothing,weather,temp = getRecClothList()
@@ -109,7 +109,7 @@ def getRecClothList():
     weather = None
     r = requests.get("http://localhost:3333/weather")
     try:
-	weather = r.json()
+        weather = r.json()
     except ValueError,e:
         print("Couldn't get weather data",r.text,e.args)
         return rec_clothing
