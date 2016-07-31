@@ -45,10 +45,11 @@ app.post('/updateClothing', function(req, res) {
 	console.log("UPDATE -- recieved from client: data = " + JSON.stringify(req.body.clothing));
     var clothing = req.body.clothing;
     var temp = req.body.temp;
+    var weather = req.body.weather;
 	    fs.writeFile('clothing.json', JSON.stringify(clothing), 'utf8', function(err){
 	    	//thow err -> the magnificent null error!
 	    });
-	    fs.writeFile('weather.json', JSON.stringify({"temp": temp}), function(err){
+	    fs.writeFile('weather.json', JSON.stringify({"temp": temp, "weather": weather}), function(err){
 
 	    });
 	    res.end("sucess");
