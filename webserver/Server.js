@@ -42,6 +42,7 @@ app.get("/weather", function(req, res){
 // or       POST: {"clothing":"[{},{}...]"}  <-- JSON encoding
 
 app.post('/updateClothing', function(req, res) {
+	console.log("UPDATE -- recieved from client: data = " + JSON.stringify(req.body.clothing));
     var clothing = req.body.clothing;
     var temp = req.body.temp;
 	    fs.writeFile('clothing.json', JSON.stringify(clothing), 'utf8', function(err){
@@ -50,7 +51,7 @@ app.post('/updateClothing', function(req, res) {
 	    fs.writeFile('weather.json', JSON.stringify({"temp": temp}), function(err){
 
 	    });
-	    // ...
+	    res.end("sucess");
 
 });
 

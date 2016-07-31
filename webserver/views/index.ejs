@@ -35,7 +35,7 @@
 		$.getJSON("/clothing", function(data){
 			for(var i = 0; i < data.length; i++){
 				var item = data[i];
-				buildList(item.name, item.color, item.type);
+				buildList(item.name, item.color, item.subtype);
 			}
 			
 		});

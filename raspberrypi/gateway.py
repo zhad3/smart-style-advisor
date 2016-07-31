@@ -86,7 +86,7 @@ def processID( uid ):
     rec_clothing,weather,temp = getRecClothList()
     post_data = {"clothing":rec_clothing,"weather":weather["weather"],"temp":temp}
     try:
-        r = requests.post('http://localhost:3000/updateClothing', data=post_data, timeout=0.5)
+        r = requests.post('http://localhost:3000/updateClothing', json=post_data, timeout=0.5)
     except requests.exceptions.Timeout:
         print("Post request to display server timed out")
 
