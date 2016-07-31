@@ -40,7 +40,7 @@ def getOnlineWeatherData( cityID ): #Duisburg 2934691
 		f.close
 def getLocalWeatherData():
 	data = getJsonFromFile('weather.json')
-	return {"temperatur": int(data["main"]["temp"])}
+	return data
 
 @route('/clothing/<manid>/<clothid>')
 def getClothingData(manid,clothid):
@@ -53,4 +53,4 @@ def getClothingData(manid,clothid):
 			response.content_type = 'application/json'
 			return clothing
 
-run(host='localhost', port=3000, debug=True)
+run(host='localhost', port=3333, debug=True)

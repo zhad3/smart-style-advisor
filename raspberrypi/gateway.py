@@ -9,7 +9,7 @@ import serial
 def mapToUrl( uid ):
     # The first 2 hexadecimal characters (00-ff) need to be present (manufacturer id) aswell as a following id (clothing id)
     if len(uid) > 2:
-        baseurl = 'http://localhost:3000/clothing/'
+        baseurl = 'http://localhost:3333/clothing/'
         manid = int(uid[:2],16)
         clothid = uid[2:] # Do not convert to int
         return baseurl+str(manid)+'/'+str(clothid)
@@ -83,7 +83,12 @@ def processID( uid ):
 	    print('Clothing ' + newinfo['name'] + ' is now available!')
 
     # Send recommended clothing to display server
-    rec_clothing = getRecClothList()
+    rec_clothing,weather,temp = getRecClothList()
+    post_data = {"clothing":rec_clothing,"weather":weather["weather"],"temp":temp}
+    try:
+        r = requests.post('http://localhost:3000/updateClothing', data=post_data, timeout=0.5)
+    except requests.exceptions.Timeout:
+        print("Post request to display server timed out")
 
     return
 
@@ -101,12 +106,15 @@ def getRecClothList():
 
     # Get temperature
     temp = 10
-    r = requests.get("http://localhost:3000/weather")
+    weather = None
+    r = requests.get("http://localhost:3333/weather")
     try:
-        temp = int(r.json()["temperatur"])
+	weather = r.json()
     except ValueError,e:
         print("Couldn't get weather data",r.text,e.args)
         return rec_clothing
+
+    temp = int(weather["main"]["temp"])
 
     for clothing in cloth_data:
         # Depending on the temperature we decide which clothing we wish to recommend
@@ -136,7 +144,7 @@ def getRecClothList():
             if clothing["type"] in found_clothing_types and clothing["is_available"]:
                 rec_clothing.append(clothing)
 
-    return rec_clothing
+    return rec_clothing,weather,temp
 
 # The device might change depending on how many other devices are connected to the raspberry pi
 # or when using a different distribution/os
