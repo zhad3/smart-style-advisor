@@ -21,6 +21,9 @@ def getJsonFromFile( fileName ):
     data = None
     try:
         data_file = open(fileName)
+    except IOError:
+        data_file = open(fileName,"w+")
+    try:
         data = json.load(data_file)
     except ValueError:
         return None
@@ -85,6 +88,7 @@ def processID( uid ):
     # Send recommended clothing to display server
     rec_clothing,weather,temp = getRecClothList()
     post_data = {"clothing":rec_clothing,"weather":weather["weather"],"temp":temp}
+    print("Trying to send data: ",post_data)
     try:
         r = requests.post('http://localhost:3000/updateClothing', json=post_data, timeout=0.5)
     except requests.exceptions.Timeout:

@@ -9,24 +9,34 @@ from bottle import route, run, response
 def weather():
 	now = int(time.time())
 	lastqueried = getJsonFromFile('time.json')
-	last = int(lastqueried['time'])
+        if lastqueried != None:
+	    last = int(lastqueried['time'])
+        else:
+            last = now - 600
 	difference = now - last
-#	if difference > 600:
-#		print('current weather data is older than 10 minutes -- fetching from server')
-#		getOnlineWeatherData(2934691)
-#		f = open('time.json', 'w')
-#		try:
-#			json.dump({"time": str(now)}, f)
-#		finally:
-#			f.close()
+	if difference > 600:
+		print('current weather data is older than 10 minutes -- fetching from server')
+		getOnlineWeatherData(2934691)
+		f = open('time.json', 'w')
+		try:
+			json.dump({"time": str(now)}, f)
+		finally:
+			f.close()
 	# Now return actual weather data
 	weatherData = getLocalWeatherData()
 	return weatherData
 
 # This function returns a json Object from a specified file
 def getJsonFromFile( fileName ):
-    data_file = open(fileName)
-    data = json.load(data_file)
+    try:
+        data_file = open(fileName)
+    except IOError:
+        data_file = open(fileName,"w+")
+    try:
+        data = json.load(data_file)
+    except ValueError:
+        print("Could not parse"+fileName)
+        return None
     return data
 
 def getOnlineWeatherData( cityID ): #Duisburg 2934691

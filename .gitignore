@@ -7,5 +7,6 @@ ehthumbs.db
 Thumbs.db
 raspberrypi/clothing.json
 raspberrypi/weather.json
+raspberrypi/time.json
 webserver/clothing.json
 webserver/weather.json
