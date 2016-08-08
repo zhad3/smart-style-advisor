@@ -41,8 +41,12 @@
 		});
 
 		$.getJSON("/weather", function(data){
-			var h = '<img src="/icons/' + data.weather.icon + '.png" width="100" height="100">';
-			h += '<h3>Situation: ' + data.weather.description + '</h3>';
+                        var wd = data.weather;
+                        if(data.weather instanceof Array) {
+                            wd = data.weather[0];
+                        }
+			var h = '<img src="/icons/' + wd.icon + '.png" width="100" height="100">';
+			h += '<h3>Situation: ' + wd.description + '</h3>';
 			h += '<h3>Temperature: ' + data.temp + '</h3>';
 			$('#weather').append(h); 
 			

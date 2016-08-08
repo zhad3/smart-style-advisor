@@ -143,9 +143,9 @@ def getRecClothList():
 
     # There is atleast one type (pants, top or shoes) that we couldn't find any fitting clothing for
     # Try again with fallbacks adding clothing with no fitting subtype (wear jeans even though its hot)
-    if len(found_clothing_types) == 0:
+    if len(found_clothing_types) < 3:
         for clothing in cloth_data:
-            if clothing["type"] in found_clothing_types and clothing["is_available"]:
+            if clothing["type"] not in found_clothing_types and clothing["is_available"]:
                 rec_clothing.append(clothing)
 
     return rec_clothing,weather,temp
