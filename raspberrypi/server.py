@@ -46,7 +46,7 @@ def getOnlineWeatherData( cityID ): #Duisburg 2934691
 	    weather = r.json()
         except:
             print("Could not retrieve weather data from server. Trying local data.")
-            return getLocalWeatherData()
+            return
 	f = open('weather.json', 'w')
 	try:
 		json.dump(weather, f)
