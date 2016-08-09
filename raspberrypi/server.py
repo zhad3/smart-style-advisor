@@ -41,8 +41,12 @@ def getJsonFromFile( fileName ):
 
 def getOnlineWeatherData( cityID ): #Duisburg 2934691
 	url = "http://api.openweathermap.org/data/2.5/weather?id=" + str(cityID) +"&APPID=154e9a2853bb39627c17906e69f7a56c&units=metric"
-	r = requests.get(url)
-	weather = r.json()
+        try:
+	    r = requests.get(url)
+	    weather = r.json()
+        except:
+            print("Could not retrieve weather data from server. Trying local data.")
+            return getLocalWeatherData()
 	f = open('weather.json', 'w')
 	try:
 		json.dump(weather, f)
